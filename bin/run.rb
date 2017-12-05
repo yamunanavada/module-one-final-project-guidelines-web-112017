@@ -13,5 +13,9 @@ require_relative '../config/environment'
 welcome
 enter_user
 enter_email
-search_results = get_search_results_with_destination(origin, destination, date)
-parsed_date = parse_search_results(search_results)
+start = origin
+dest = destination
+date_depart = date
+search_results = get_search_results_with_destination(start, dest, date_depart)
+parsed_date = parse_search_results(search_results, start, dest, date_depart)
+puts parsed_date

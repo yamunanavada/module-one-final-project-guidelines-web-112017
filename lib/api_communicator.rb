@@ -14,12 +14,12 @@ end
 def parse_search_results(results_from_destination, origin, destination, date)
   #takes in the hash created from get_search_results_with_destination and parses out the data to create an array of results
 
-  results_from_destination["results"].map do |flight_hash|
+results_from_destination["results"].map do |flight_hash|
     result = {}
     result[:fare] = flight_hash["fare"]["total_price"]
     result[:origin] = origin
     result[:destination] = destination
     result[:departure_date] = date
+    result
   end
-
 end
