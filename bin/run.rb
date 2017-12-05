@@ -1,4 +1,6 @@
 require_relative '../config/environment'
+require_all 'app'
+require "pry"
 
 
 #create or find user
@@ -18,4 +20,8 @@ dest = destination
 date_depart = date
 search_results = get_search_results_with_destination(start, dest, date_depart)
 parsed_date = parse_search_results(search_results, start, dest, date_depart)
-puts parsed_date
+create_flights(parsed_date)
+
+binding.pry
+
+puts "hello"
