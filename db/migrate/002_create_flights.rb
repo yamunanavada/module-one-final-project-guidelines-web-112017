@@ -6,7 +6,6 @@ class CreateFlights < ActiveRecord::Migration
       t.string :destination
       t.date :date_of_departure
       t.float :price
-      # t.integer :number_of_layovers
     end
   end
 end
