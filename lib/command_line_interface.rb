@@ -62,6 +62,3 @@ def ask_user_to_book_flight
   end
 
 end
-
-def congrats_you_have_booked_a_flight(user)
-  

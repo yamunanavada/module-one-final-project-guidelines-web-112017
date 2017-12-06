@@ -59,7 +59,9 @@ end
 
 def book_trip(flight_to_book, user)
   if flight_to_book != 0
+    flight = Flight.find_by(id: user.trips[flight_to_book - 1][:flight_id])
     user.trips[flight_to_book - 1].booked_flight = true
+    puts "Congrats! You have booked your trip from #{flight[:origin]} to #{flight[:destination]} on #{flight[:date_of_departure]} at #{flight[:time_of_departure]}. Happy traveling!" 
   else
     puts "You have not selected a flight to book. Here's the menu of options."
     #inserts the menu method

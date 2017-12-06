@@ -56,3 +56,27 @@ book_trip(flight_to_book, user)
 binding.pry
 
 puts "hello"
+
+
+#SEARCH, SAVE AND BOOK FLIGHTS
+# start = origin
+# dest = destination
+# date_depart = date
+# search_results = get_search_results_with_destination(start, dest, date_depart)
+# parsed_data = parse_search_results(search_results)
+# results_to_display = create_flights(parsed_data)
+# array_of_selected_flight_hashes = match_user_selections_to_flight_hashes(user_flights_to_save, parsed_data)
+# create_trips_based_on_selected_flights(array_of_selected_flight_hashes, user)
+# user_view_trips
+# view_trips(user)
+# flight_to_book = ask_user_to_book_flight
+# book_trip(flight_to_book, user)
+
+#VIEW TRIPS AND BOOK FLIGHT
+# user_view_trips
+# view_trips(user)
+# flight_to_book = ask_user_to_book_flight
+# book_trip(flight_to_book, user)
+
+#LOGOUT
+#goodbye
