@@ -16,7 +16,6 @@ def create_flights(array_of_flights)
     end
 
   end
-binding.pry
 end
 
 

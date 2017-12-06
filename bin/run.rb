@@ -19,9 +19,8 @@ start = origin
 dest = destination
 date_depart = date
 search_results = get_search_results_with_destination(start, dest, date_depart)
-parsed_date = parse_search_results(search_results, start, dest, date_depart)
+parsed_date = parse_search_results(search_results)
 create_flights(parsed_date)
 
-binding.pry
 
 puts "hello"
