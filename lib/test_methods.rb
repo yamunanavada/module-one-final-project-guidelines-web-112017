@@ -19,29 +19,23 @@ def create_flights(array_of_flights)
 end
 
 
-def show_user_the_results(array_of_flights)
-  #displays the flights found in the search for the user
 
-  array_of_flights.each do |flight|
-    puts "#{flight[:result_id]}: $#{flight[:price]}. Departs from #{flight[:origin]} on #{flight[:date_of_departure]} at #{flight[:time_of_departure]}. Arrives at #{flight[:destination]} on #{flight[:date_of_arrival]} at #{flight[:time_of_arrival]}. Number of layovers: #{flight[:number_of_layovers]}."
+
+def match_user_selections_to_flight_hashes(user_flights_to_save, parsed_data)
+  user_flights_to_save.map do |selected_result_id|
+    parsed_data.find do |flight_hash|
+      flight_hash[:result_id] == selected_result_id
+    end
   end
-end
-
-def find_flights_in_DB(user_flights_to_save, parsed_data)
-#need to finish this method
-#goal of method is the following:
-#find each result_id in teh parsed_data file based on the flight numbers the user wants to save
-end
+end  # returns array of user-selected flights, each flight in the form of a full hash of attributes
 
 
-#the below method does not yet work because i need to make the find_flights_in_DB method
-def create_trips_based_on_selected_flights(flights_found_in_db, user)
+def create_trips_based_on_selected_flights(array_of_selected_flight_hashes, user)
 
-  flights_found_in_db.each do |flight|
-    #first find the flight in the database
-    binding.pry
-    find_flight = Flight.find_by(price: flight[:price], origin: flight[:origin], destination: flight[:destination], date_of_departure: flight[:date_of_departure], time_of_departure: flight[:time_of_departure], time_of_arrival: flight[:time_of_arrival], number_of_layovers: flight[:number_of_layovers])
-    #then add a trip with the user_id and flight_id
-    Trip.create(find_flight[:id],user[:id])
+  array_of_selected_flight_hashes.each do |flight|
+
+    matching_flight_object = Flight.find_by(price: flight[:price], origin: flight[:origin], destination: flight[:destination], date_of_departure: flight[:date_of_departure], time_of_departure: flight[:time_of_departure], time_of_arrival: flight[:time_of_arrival], number_of_layovers: flight[:number_of_layovers])
+    #Trip.create(find_flight[:id],user[:id])
+    Trip.create(user_id: user.id, flight_id: matching_flight_object.id, booked_flight: false)
   end
 end

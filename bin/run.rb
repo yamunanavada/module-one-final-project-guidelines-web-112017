@@ -1,5 +1,4 @@
 require_relative '../config/environment'
-require_all 'app'
 require "pry"
 
 
@@ -12,17 +11,15 @@ require "pry"
 #the User can view their own trips ()
 #the user can book trips (i.e. Trip.booked_flight => true)
 
-welcome_message
-user_name = enter_user
-user_email = enter_email
+session = Session.new
+session.start
 
-#create or save user to database
-user = User.find_or_create_by(name: user_name, email: user_email)
 
-#MISSING HERE - ERROR MESSSAGES FOR INCORRECT QUERIES
-start = origin
-dest = destination
-date_depart = date
+
+
+
+=begin
+
 
 #sends query to the website, and retrieves the hash of results
 search_results = get_search_results_with_destination(start, dest, date_depart)
@@ -41,10 +38,8 @@ user_flights_to_save = select_flights
 
 # #Finds flight in database - NEED TO WRITE THIS METHOD
 # flights_in_DB = find_flights_in_DB(user_flights_to_save, parsed_data)
+array_of_selected_flight_hashes = match_user_selections_to_flight_hashes(user_flights_to_save, parsed_data)
 
 #UPDATE THIS METHOD ARUGMENT - user_flights_to_save - ONCE YOU FINISH find_flights_in_DB METHOD TO the RESULT OF find_flights_in_DB
-create_trips_based_on_selected_flights(user_flights_to_save, user)
-
-binding.pry
-
-puts "hello"
+create_trips_based_on_selected_flights(array_of_selected_flight_hashes, user)
+=end

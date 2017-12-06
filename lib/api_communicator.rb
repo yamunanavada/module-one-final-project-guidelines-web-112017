@@ -1,3 +1,5 @@
+=begin
+
 require 'rest-client'
 require 'JSON'
 require "pry"
@@ -29,3 +31,5 @@ def parse_search_results(results_from_destination)
       result
     end
 end
+
+=end

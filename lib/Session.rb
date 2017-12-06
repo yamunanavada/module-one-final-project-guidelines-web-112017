@@ -1,4 +1,3 @@
-=begin
 class Session
 
   attr_accessor :user
@@ -18,7 +17,7 @@ class Session
     user_input_name = gets.chomp.downcase
     puts "Please enter your email address: "
     user_input_email = gets.chomp.downcase
-    @user = User.find_or_create_by(name: user_name, email: user_email)
+    @user = User.find_or_create_by(name: user_input_name, email: user_input_email)
   end
 
   def menu
@@ -27,14 +26,14 @@ class Session
     2 - View My Trips
     3 - Inspire Me
     4 - Exit"
-    answer = gets.chomp
+    answer = gets.chomp.to_i
     case answer
     when 1
       activity = Search.new(@user)
       activity.go
       menu
     when 2
-      activity = ViewTrips.new(@user)
+      activity = ViewMyTrips.new(@user)
       activity.go
       menu
     when 3
@@ -47,4 +46,3 @@ class Session
   end
 
 end
-=end
