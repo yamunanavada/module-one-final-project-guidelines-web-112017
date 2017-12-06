@@ -12,12 +12,14 @@ require "pry"
 #the User can view their own trips ()
 #the user can book trips (i.e. Trip.booked_flight => true)
 
-welcome
-enter_user
-enter_email
+welcome_message
+user_name = enter_user
+user_email = enter_email
 
-# MISSING HERE - SOME METHOD TO SAVE THE USER AND ADD TO DATABASE
+#create or save user to database
+User.find_or_create_by(name: user_name, email: user_email)
 
+#MISSING HERE - ERROR MESSSAGES FOR INCORRECT QUERIES
 start = origin
 dest = destination
 date_depart = date
