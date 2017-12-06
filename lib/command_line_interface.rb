@@ -17,18 +17,42 @@ def enter_email
 end
 
 def origin
-  puts "Please enter your starting location: "
-  gets.chomp.downcase
+  puts "Please enter the airport code (XXX) of your starting location: "
+  answer = gets.chomp.downcase
+  if answer.length != 3
+    begin
+      raise PartnerError
+    rescue PartnerError => error
+      puts error.airport_message
+      origin
+    end
+  end
 end
 
 def destination
-  puts "Please enter your destination: "
-  gets.chomp.downcase
+  puts "Please enter the airport code (XXX) of your destination: "
+  answer = gets.chomp.downcase
+  if answer.length != 3
+    begin
+      raise PartnerError
+    rescue PartnerError => error
+      puts error.airport_message
+      destination
+    end
+  end
 end
 
 def date
-  puts "What is your desired departure date? "
-  gets.chomp.downcase
+  puts "Please enter your departure date (YYYY-MM-DD): "
+  answer = gets.chomp.downcase
+  if answer.split("-")[0].length !=4
+    begin
+      raise PartnerError
+    rescue PartnerError => error
+      puts error.date_message
+      date
+    end
+  end
 end
 
 def select_flights
@@ -61,4 +85,16 @@ def ask_user_to_book_flight
     flight = 0
   end
 
+end
+
+
+
+class PartnerError < StandardError
+  def date_message
+    "You did not enter the date in the correct format (YYYY-MM-DD). Please re-enter the date of departure."
+  end
+
+  def airport_message
+    "You did not enter the correct format of the desired airport (XXX). Please re-enter the airport code."
+  end
 end
