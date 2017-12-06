@@ -2,15 +2,21 @@ require_relative '../app/models/Flight.rb'
 
 def create_flights(array_of_flights)
   #takes in an array of hashes, in which each hash is a flight from our search
-  array_of_flights.each do |flight|
+  array_of_flights.map do |flight|
     #now we are creating flight instances that are inserted into our database using create
+
     Flight.create(price: flight[:price]) do |u|
       u.origin = flight[:origin]
       u.destination =  flight[:destination]
       u.date_of_departure = flight[:date_of_departure]
-
+      u.time_of_departure = flight[:time_of_departure]
+      u.date_of_arrival = flight[:date_of_arrival]
+      u.time_of_arrival = flight[:time_of_arrival]
+      u.number_of_layovers = flight[:number_of_layovers]
     end
+
   end
+binding.pry
 end
 
 

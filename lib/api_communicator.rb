@@ -11,19 +11,20 @@ def get_search_results_with_destination(origin, destination, date)
 
 end
 
-def parse_search_results(results_from_destination, origin, destination, date)
+def parse_search_results(results_from_destination)
   #takes in the hash created from get_search_results_with_destination and parses out the data to create an array of results
 
 results_from_destination["results"].map do |flight_hash|
     result = {}
     result[:price] = flight_hash["fare"]["total_price"]
-    result[:origin] = origin
-    result[:destination] = destination
-    result[:date_of_departure] = flight_hash["itineraries"].first["outbound"]["flights"]["departs_at"].split("T").first
-    result[:time_of_departure] = flight_hash["itineraries"].first["outbound"]["flights"]["departs_at"].split("T").last
+    result[:origin] = flight_hash["itineraries"].first["outbound"]["flights"].first["origin"]["airport"]
+    result[:destination] = flight_hash["itineraries"].last["outbound"]["flights"].first["destination"]["airport"]
+    result[:date_of_departure] = flight_hash["itineraries"].first["outbound"]["flights"].first["departs_at"].split("T").first
+    result[:time_of_departure] = flight_hash["itineraries"].first["outbound"]["flights"].first["arrives_at"].split("T").last
     result[:number_of_layovers] = flight_hash["itineraries"].length - 1
-    result[:date_of_arrival] = flight_hash["itineraries"].last["outbound"]["flights"]["arrives_at"].split("T").first
-    result[:time_of_arrival] = flight_hash["itineraries"].last["outbound"]["flights"]["arrives_at"].split("T").last
+    result[:date_of_arrival] = flight_hash["itineraries"].last["outbound"]["flights"].first["arrives_at"].split("T").first
+    result[:time_of_arrival] = flight_hash["itineraries"].last["outbound"]["flights"].first["arrives_at"].split("T").last
+
     result
   end
 end
