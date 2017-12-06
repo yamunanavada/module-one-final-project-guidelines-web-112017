@@ -14,7 +14,7 @@ class InspireMe
   def go
     get_origin #sets @origin for this Search
     get_departure_date #sets @departure date for this Search
-    get_budget #sets @destination for this Search
+    get_budget #sets @budget for this Search
     parse_search_results_from_inspiration(get_flights_from_inspiration_api) #calls API; captures results as @parsed_flight_results
     create_flights_inspiration(@parsed_flight_results) #creates Flight objects
     show_user_the_results(@parsed_flight_results) #displays flight results in viewable format
@@ -143,10 +143,11 @@ class InspireMe
 
   def create_trips_inspiration(parsed_flight_hashes, user)
     parsed_flight_hashes.each do |flight|
-      binding.pry
-      matching_flight_object = Flight.find_by(price: flight[:price], origin: flight[:origin], destination: flight[:destination], date_of_departure: flight[:date_of_departure], time_of_departure: flight[:time_of_departure], time_of_arrival: flight[:time_of_arrival], number_of_layovers: flight[:number_of_layovers])
+      matching_flight_object = Flight.find_by(price: flight[:price], origin: flight[:origin], destination: flight[:destination], date_of_departure: flight[:date_of_departure], time_of_departure: flight[:time_of_departure], date_of_arrival: flight[:date_of_arrival], time_of_arrival: flight[:time_of_arrival], number_of_layovers: flight[:number_of_layovers])
       #Trip.create(find_flight[:id],user[:id])
-      Trip.find_or_create_by(user_id: user.id, flight_id: matching_flight_object.id, booked_flight: false)
+      binding.pry
+      Trip.find_or_create_by(user_id: user.id, flight_id: matching_flight_object.id)
+
     end
   end
 
