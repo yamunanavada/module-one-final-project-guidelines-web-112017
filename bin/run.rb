@@ -18,9 +18,18 @@ enter_email
 start = origin
 dest = destination
 date_depart = date
+
+#sends query to the website, and retrieves the hash of results
 search_results = get_search_results_with_destination(start, dest, date_depart)
-parsed_date = parse_search_results(search_results)
-create_flights(parsed_date)
+
+#parses the data and creates an array of flights with the right attributes
+parsed_data = parse_search_results(search_results)
+
+#creates Flights in the database given the array of flights
+create_flights(parsed_data)
+
+#displays the list of results to the user
+show_user_the_results(parsed_data)
 
 
 puts "hello"

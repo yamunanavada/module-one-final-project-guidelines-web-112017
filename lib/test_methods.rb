@@ -19,6 +19,25 @@ def create_flights(array_of_flights)
 end
 
 
-# [{:fare=>"1268.40", :origin=>"sfo", :destination=>"jfk", :departure_date=>"2018-01-01"}, {:fare=>"1282.80", :origin=>"sfo", :destination=>"jfk", :departure_date=>"2018-01-01"}, {:fare=>"1301.80", :origin=>"sfo", :destination=>"jfk", :departure_date=>"2018-01-01"},
-#   {:fare=>"1657.80", :origin=>"sfo", :destination=>"jfk", :departure_date=>"2018-01-01"},
-#   {:fare=>"1713.20", :origin=>"sfo", :destination=>"jfk", :departure_date=>"2018-01-01"}]
+def show_user_the_results(array_of_flights)
+
+  array_of_flights.each do |flight|
+    puts "#{flight[:result_id]}: $#{flight[:price]}. Departs from #{flight[:origin]} on #{flight[:date_of_departure]} at #{flight[:time_of_departure]}. Arrives at #{flight[:destination]} on #{flight[:date_of_arrival]} at #{flight[:time_of_arrival]}. Number of layovers: #{flight[:number_of_layovers]}."
+  end
+end
+
+
+# results_from_destination["results"].map do |flight_hash|
+#     result = {}
+#     result[:result_id] = results_from_destination["results"].index(flight_hash) + 1
+#     result[:price] = flight_hash["fare"]["total_price"]
+#     result[:origin] = flight_hash["itineraries"].first["outbound"]["flights"].first["origin"]["airport"]
+#     result[:destination] = flight_hash["itineraries"].last["outbound"]["flights"].first["destination"]["airport"]
+#     result[:date_of_departure] = flight_hash["itineraries"].first["outbound"]["flights"].first["departs_at"].split("T").first
+#     result[:time_of_departure] = flight_hash["itineraries"].first["outbound"]["flights"].first["arrives_at"].split("T").last
+#     result[:number_of_layovers] = flight_hash["itineraries"].length - 1
+#     result[:date_of_arrival] = flight_hash["itineraries"].last["outbound"]["flights"].first["arrives_at"].split("T").first
+#     result[:time_of_arrival] = flight_hash["itineraries"].last["outbound"]["flights"].first["arrives_at"].split("T").last
+#
+#     result
+#   end
