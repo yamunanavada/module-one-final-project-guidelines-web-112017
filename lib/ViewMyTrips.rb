@@ -1,7 +1,6 @@
 require 'rest-client'
 require 'JSON'
 require "pry"
-require_relative "command_line_interface.rb"
 
 
 class ViewMyTrips

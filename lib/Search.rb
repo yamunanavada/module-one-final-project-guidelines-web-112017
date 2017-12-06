@@ -1,7 +1,6 @@
 require 'rest-client'
 require 'JSON'
 require "pry"
-require_relative "command_line_interface.rb"
 
 
 class Search
@@ -13,7 +12,9 @@ class Search
   end
 
   def go
-    get_search_terms #sets @origin, @destination, and @departure date for this Search
+    get_origin #sets @origin for this Search
+    get_destination #sets @destination for this Search
+    get_departure_date #sets @departure date for this Search
     parse_search_results(get_flights_from_api) #calls API; captures results as @parsed_flight_results
     create_flights(@parsed_flight_results) #creates Flight objects
     show_user_the_results(@parsed_flight_results) #displays flight results in viewable format
@@ -21,13 +22,45 @@ class Search
   end
 
 
-  def get_search_terms
-    puts "Please enter your starting location: "
+  def get_origin
+    puts "Please enter the airport code (XXX) of your starting location: "
     @origin = gets.chomp.downcase
-    puts "Please enter your destination: "
-    @destination = gets.chomp.downcase
-    puts "What is your desired departure date? "
+    if @origin.length != 3
+      begin
+        raise PartnerError
+      rescue PartnerError => error
+        puts error.airport_message
+        get_origin
+      end
+    end
+  end
+
+  def get_destination
+      puts "Please enter the airport code (XXX) of your destination: "
+      @destination = gets.chomp.downcase
+      if @destination.length != 3
+        begin
+          raise PartnerError
+        rescue PartnerError => error
+          puts error.airport_message
+          get_destination
+        end
+      end
+    end
+
+
+
+  def get_departure_date
+    puts "Please enter your desired date of departure (YYYY-MM-DD): "
     @departure_date = gets.chomp.downcase
+    if @departure_date.split("-")[0].length !=4 || @departure_date.split("-").length != 3
+       begin
+         raise PartnerError
+       rescue PartnerError => error
+         puts error.date_message
+         get_departure_date
+       end
+    end
   end
 
   def get_flights_from_api
