@@ -15,6 +15,9 @@ require "pry"
 welcome
 enter_user
 enter_email
+
+# MISSING HERE - SOME METHOD TO SAVE THE USER AND ADD TO DATABASE
+
 start = origin
 dest = destination
 date_depart = date
@@ -31,5 +34,11 @@ create_flights(parsed_data)
 #displays the list of results to the user
 show_user_the_results(parsed_data)
 
+#asks the user if he or she would like to save flights
+user_flights_to_save = select_flights
+
+
+puts user_flights_to_save
+binding.pry
 
 puts "hello"
