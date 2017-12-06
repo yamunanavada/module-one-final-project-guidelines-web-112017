@@ -1,5 +1,4 @@
 require_relative '../config/environment'
-require_all 'app'
 require "pry"
 
 
@@ -41,9 +40,18 @@ user_flights_to_save = select_flights
 
 # #Finds flight in database - NEED TO WRITE THIS METHOD
 # flights_in_DB = find_flights_in_DB(user_flights_to_save, parsed_data)
+array_of_selected_flight_hashes = match_user_selections_to_flight_hashes(user_flights_to_save, parsed_data)
 
 #UPDATE THIS METHOD ARUGMENT - user_flights_to_save - ONCE YOU FINISH find_flights_in_DB METHOD TO the RESULT OF find_flights_in_DB
-create_trips_based_on_selected_flights(user_flights_to_save, user)
+create_trips_based_on_selected_flights(array_of_selected_flight_hashes, user)
+
+user_view_trips
+
+view_trips(user)
+
+flight_to_book = ask_user_to_book_flight
+
+book_trip(flight_to_book, user)
 
 binding.pry
 
