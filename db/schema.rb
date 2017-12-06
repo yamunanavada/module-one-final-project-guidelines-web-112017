@@ -10,13 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 4) do
+ActiveRecord::Schema.define(version: 5) do
 
   create_table "flights", force: :cascade do |t|
-    t.string "origin"
-    t.string "destination"
-    t.date   "date_of_departure"
-    t.float  "price"
+    t.string  "origin"
+    t.string  "destination"
+    t.date    "date_of_departure"
+    t.float   "price"
+    t.integer "number_of_layovers"
+    t.string  "time_of_departure"
+    t.string  "date_of_arrival"
+    t.string  "time_of_arrival"
   end
 
   create_table "trips", force: :cascade do |t|

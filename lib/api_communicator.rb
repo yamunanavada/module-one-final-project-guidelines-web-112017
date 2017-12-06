@@ -16,10 +16,14 @@ def parse_search_results(results_from_destination, origin, destination, date)
 
 results_from_destination["results"].map do |flight_hash|
     result = {}
-    result[:fare] = flight_hash["fare"]["total_price"]
+    result[:price] = flight_hash["fare"]["total_price"]
     result[:origin] = origin
     result[:destination] = destination
-    result[:departure_date] = date
+    result[:date_of_departure] = flight_hash["itineraries"].first["outbound"]["flights"]["departs_at"].split("T").first
+    result[:time_of_departure] = flight_hash["itineraries"].first["outbound"]["flights"]["departs_at"].split("T").last
+    result[:number_of_layovers] = flight_hash["itineraries"].length - 1
+    result[:date_of_arrival] = flight_hash["itineraries"].last["outbound"]["flights"]["arrives_at"].split("T").first
+    result[:time_of_arrival] = flight_hash["itineraries"].last["outbound"]["flights"]["arrives_at"].split("T").last
     result
   end
 end

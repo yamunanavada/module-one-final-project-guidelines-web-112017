@@ -4,10 +4,11 @@ def create_flights(array_of_flights)
   #takes in an array of hashes, in which each hash is a flight from our search
   array_of_flights.each do |flight|
     #now we are creating flight instances that are inserted into our database using create
-    Flight.create(price: flight[:fare]) do |u|
+    Flight.create(price: flight[:price]) do |u|
       u.origin = flight[:origin]
       u.destination =  flight[:destination]
-      u.date_of_departure = flight[:departure_date]
+      u.date_of_departure = flight[:date_of_departure]
+
     end
   end
 end
