@@ -17,7 +17,7 @@ user_name = enter_user
 user_email = enter_email
 
 #create or save user to database
-User.find_or_create_by(name: user_name, email: user_email)
+user = User.find_or_create_by(name: user_name, email: user_email)
 
 #MISSING HERE - ERROR MESSSAGES FOR INCORRECT QUERIES
 start = origin
@@ -31,7 +31,7 @@ search_results = get_search_results_with_destination(start, dest, date_depart)
 parsed_data = parse_search_results(search_results)
 
 #creates Flights in the database given the array of flights
-create_flights(parsed_data)
+results_to_display = create_flights(parsed_data)
 
 #displays the list of results to the user
 show_user_the_results(parsed_data)
@@ -39,8 +39,12 @@ show_user_the_results(parsed_data)
 #asks the user if he or she would like to save flights
 user_flights_to_save = select_flights
 
+# #Finds flight in database - NEED TO WRITE THIS METHOD
+# flights_in_DB = find_flights_in_DB(user_flights_to_save, parsed_data)
 
-puts user_flights_to_save
+#UPDATE THIS METHOD ARUGMENT - user_flights_to_save - ONCE YOU FINISH find_flights_in_DB METHOD TO the RESULT OF find_flights_in_DB
+create_trips_based_on_selected_flights(user_flights_to_save, user)
+
 binding.pry
 
 puts "hello"
