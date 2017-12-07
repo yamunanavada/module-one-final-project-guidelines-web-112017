@@ -19,11 +19,16 @@ class ViewMyTrips
   def view_trips
     @user.trips.map do |trip|
       flight = Flight.find_by(id: trip[:flight_id])
-      puts "#{user.trips.index(trip) + 1}: $#{flight[:price]}. Departs from #{flight[:origin]} on #{flight[:date_of_departure]} at #{flight[:time_of_departure]}. Arrives at #{flight[:destination]} on #{flight[:date_of_arrival]} at #{flight[:time_of_arrival]}. Number of layovers: #{flight[:number_of_layovers]}."
+      if flight[:time_of_departure] == "-"
+        puts "#{user.trips.index(trip) + 1}: $#{flight[:price]}. Departs from #{flight[:origin]} on #{flight[:date_of_departure]}. Arrives at #{flight[:destination]} on #{flight[:date_of_arrival]}."
+      else
+        puts "#{user.trips.index(trip) + 1}: $#{flight[:price]}. Departs from #{flight[:origin]} on #{flight[:date_of_departure]} at #{flight[:time_of_departure]}. Arrives at #{flight[:destination]} on #{flight[:date_of_arrival]} at #{flight[:time_of_arrival]}. Number of layovers: #{flight[:number_of_layovers]}."
+      end
     end
   end
 
   def book_a_flight?
+    puts "--------------------------------------"
     puts "Would you like to book a flight? Y/N"
     answer = gets.chomp.downcase
     if answer == "y"
@@ -32,6 +37,9 @@ class ViewMyTrips
       book_trip(flight, @user)
     elsif answer == "n"
       puts "Ok, you have not selected a flight to book. Here's the menu of options."
+    else
+      puts "That was an incorrect response! Try again!"
+      book_a_flight?
     end
   end
 
@@ -39,7 +47,11 @@ class ViewMyTrips
   def book_trip(flight_to_book, user)
     flight = Flight.find_by(id: user.trips[flight_to_book - 1][:flight_id])
     user.trips[flight_to_book - 1].booked_flight = true
-    puts "Congrats! You have booked your trip from #{flight[:origin]} to #{flight[:destination]} on #{flight[:date_of_departure]} at #{flight[:time_of_departure]}. Happy traveling!"
+    if flight[:time_of_departure] == "-"
+      puts "Congrats! You have booked your trip from #{flight[:origin]} to #{flight[:destination]} on #{flight[:date_of_departure]}. Happy traveling!"
+    else
+      puts "Congrats! You have booked your trip from #{flight[:origin]} to #{flight[:destination]} on #{flight[:date_of_departure]} at #{flight[:time_of_departure]}. Happy traveling!"
+    end
   end
 
 

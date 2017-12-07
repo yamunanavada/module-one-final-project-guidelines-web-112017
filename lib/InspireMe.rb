@@ -119,6 +119,7 @@ class InspireMe
   end
 
   def want_to_save?
+    puts "--------------------------------------"
     puts "Would you like to save a flight? (Y/N)"
     answer = gets.chomp.downcase
     if answer == "y"

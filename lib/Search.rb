@@ -28,7 +28,6 @@ class Search
     puts "Please enter the airport code (XXX) of your starting location: "
     @origin = gets.chomp.upcase
     if Iatacode.find_by(code: @origin) == nil
-      binding.pry
       begin
         raise PartnerError
       rescue PartnerError => error
@@ -41,7 +40,7 @@ class Search
   def get_destination
       puts "Please enter the airport code (XXX) of your destination: "
       @destination = gets.chomp.upcase
-      if @destination.length != 3
+      if Iatacode.find_by(code: @destination) == nil
         begin
           raise PartnerError
         rescue PartnerError => error
@@ -117,12 +116,14 @@ class Search
   def show_user_the_results(array_of_flights)
     #displays the flights found in the search for the user
     #what if we just printed out the array from parse_search_results?
+    puts "--------------------------------------"
     array_of_flights.each do |flight|
       puts "#{flight[:result_id]}: $#{flight[:price]}. Departs from #{flight[:origin]} on #{flight[:date_of_departure]} at #{flight[:time_of_departure]}. Arrives at #{flight[:destination]} on #{flight[:date_of_arrival]} at #{flight[:time_of_arrival]}. Number of layovers: #{flight[:number_of_layovers]}."
     end
   end
 
   def want_to_save?
+    puts "--------------------------------------"
     puts "Would you like to save a flight? (Y/N)"
     answer = gets.chomp.downcase
     if answer == "y"

@@ -1,4 +1,5 @@
 require "pry"
+require "csv"
 
 iata_code = [
     {
@@ -73230,8 +73231,12 @@ iata_code = [
 
 
 iata_code.each do |code|
-
   if code[:status] == 1
     Iatacode.find_or_create_by(code: code[:iata])
   end
 end
+
+# 
+# CSV.foreach(/Users/Yamuna/dev/Module_1/module-one-final-project-guidelines-web-112017/IATA_airport_codes.csv, {:headers => true, :header_converters => :symbol}) do |row|
+#   Iatacode.find_or_create_by(code: row[:code])
+# end
