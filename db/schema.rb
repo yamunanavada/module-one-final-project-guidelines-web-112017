@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 6) do
+ActiveRecord::Schema.define(version: 7) do
 
   create_table "flights", force: :cascade do |t|
     t.string  "origin"
@@ -21,6 +21,10 @@ ActiveRecord::Schema.define(version: 6) do
     t.string  "time_of_departure"
     t.string  "date_of_arrival"
     t.string  "time_of_arrival"
+  end
+
+  create_table "iatacodes", force: :cascade do |t|
+    t.string "code"
   end
 
   create_table "trips", force: :cascade do |t|

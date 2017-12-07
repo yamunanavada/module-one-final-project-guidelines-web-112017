@@ -26,8 +26,9 @@ class Search
 
   def get_origin
     puts "Please enter the airport code (XXX) of your starting location: "
-    @origin = gets.chomp.downcase
-    if @origin.length != 3
+    @origin = gets.chomp.upcase
+    if Iatacode.find_by(code: @origin) == nil
+      binding.pry
       begin
         raise PartnerError
       rescue PartnerError => error
@@ -39,7 +40,7 @@ class Search
 
   def get_destination
       puts "Please enter the airport code (XXX) of your destination: "
-      @destination = gets.chomp.downcase
+      @destination = gets.chomp.upcase
       if @destination.length != 3
         begin
           raise PartnerError
@@ -66,8 +67,19 @@ class Search
   end
 
   def get_flights_from_api
-    data = RestClient.get("https://api.sandbox.amadeus.com/v1.2/flights/low-fare-search?apikey=m9vXViQRJGAf8CMl4HpknPxPffSFKAgE&origin=#{@origin}&destination=#{@destination}&departure_date=#{@departure_date}")
-    updated_data= JSON.parse(data)
+    body = begin
+       RestClient.get("https://api.sandbox.amadeus.com/v1.2/flights/low-fare-search?apikey=m9vXViQRJGAf8CMl4HpknPxPffSFKAgE&origin=#{@origin}&destination=#{@destination}&departure_date=#{@departure_date}")
+     rescue => e
+       e.response.body
+     end
+     if body.class == String
+       body.slice!(0,25)
+       body.chomp!("\"}")
+       puts body
+       go
+     else
+       updated_data= JSON.parse(body)
+     end
   end
 
   def parse_search_results(results_from_destination)
@@ -149,6 +161,5 @@ class Search
       Trip.find_or_create_by(user_id: user.id, flight_id: matching_flight_object.id, booked_flight: false)
     end
   end
-
 
 end

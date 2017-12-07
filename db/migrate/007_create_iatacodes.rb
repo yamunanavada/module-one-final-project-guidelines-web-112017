@@ -5,4 +5,5 @@ class CreateIatacodes < ActiveRecord::Migration
     create_table :iatacodes do |t|
       t.string :code
     end
+  end
 end

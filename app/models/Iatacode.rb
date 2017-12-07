@@ -1,4 +1,4 @@
-class Iatacode < Migration::Base
+class Iatacode < ActiveRecord::Base
 
 
 
