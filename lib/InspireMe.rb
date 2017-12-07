@@ -17,8 +17,8 @@ class InspireMe
     get_budget #sets @budget for this Search
     parse_search_results_from_inspiration(get_flights_from_inspiration_api) #calls API; captures results as @parsed_flight_results
     create_flights_inspiration(@parsed_flight_results) #creates Flight objects
-    # show_user_the_results(@parsed_flight_results) #displays flight results in viewable format
-    # want_to_save? #results in creation of Trips, or just ends - either way, return
+    show_user_the_results(@parsed_flight_results) #displays flight results in viewable format
+    want_to_save? #results in creation of Trips, or just ends - either way, return
   end
 
 
@@ -64,6 +64,7 @@ class InspireMe
   def get_flights_from_inspiration_api
     #takes in user entered search terms, and gets search results from the website
     data = RestClient.get("https://api.sandbox.amadeus.com/v1.2/flights/inspiration-search?apikey=m9vXViQRJGAf8CMl4HpknPxPffSFKAgE&origin=#{@origin}&departure_date=#{@departure_date}&max_price=#{@budget}")
+
     updated_data= JSON.parse(data)
   end
 
@@ -71,7 +72,7 @@ class InspireMe
 
     @parsed_flight_results = get_flights_from_inspiration_api["results"].map do |flight_hash|
       result = {}
-      result[:result_id] = get_flights_from_inspiration_api["results"].index(flight_hash) + 1
+      # result[:result_id] = get_flights_from_inspiration_api["results"].index(flight_hash) + 1
       result[:price] = flight_hash["price"]
       result[:origin] = get_flights_from_inspiration_api["origin"]
       result[:destination] = flight_hash["destination"]
@@ -81,28 +82,21 @@ class InspireMe
       result[:date_of_arrival] = flight_hash["return_date"]
       result[:time_of_arrival] = "-"
       result
+    end.uniq
+
+    @parsed_flight_results.map do |flight_hash|
+      flight_hash[:result_id] = @parsed_flight_results.index(flight_hash)+1
     end
+    binding.pry
   end
 
   def create_flights_inspiration(array_of_flights)
     #takes in an array of hashes, in which each hash is a flight from our search
     array_of_flights.each do |flight|
       #now we are creating flight instances that are inserted into our database using create
-      new_saved_flight = Flight.find_or_create_by(price: flight[:price]) do |u|
-        u.origin = flight[:origin]
-        u.destination =  flight[:destination]
-        u.date_of_departure = flight[:date_of_departure]
-        u.time_of_departure = flight[:time_of_departure]
-        u.date_of_arrival = flight[:date_of_arrival]
-        u.time_of_arrival = flight[:time_of_arrival]
-        u.number_of_layovers = flight[:number_of_layovers]
-      end
-      puts flight
-      puts new_saved_flight
+      new_saved_flight = Flight.find_or_create_by(price: flight[:price], origin: flight[:origin], destination:  flight[:destination], date_of_departure: flight[:date_of_departure], time_of_departure: flight[:time_of_departure], date_of_arrival: flight[:date_of_arrival], time_of_arrival: flight[:time_of_arrival], number_of_layovers: flight[:number_of_layovers])
     end
-    puts Flight.all.length
     binding.pry
-
   end
 
   def show_user_the_results(array_of_flights)

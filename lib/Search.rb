@@ -85,7 +85,7 @@ class Search
       result[:time_of_arrival] = flight_hash["itineraries"].last["outbound"]["flights"].first["arrives_at"].split("T").last
       result
     end.uniq
-
+    #there are repeats in teh search results, so must first insert and make sure the flight hashes are uniq before adding the result_id
     @parsed_flight_results.map do |flight_hash|
       flight_hash[:result_id] = @parsed_flight_results.index(flight_hash)+1
     end
