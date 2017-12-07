@@ -70,9 +70,8 @@ class InspireMe
        e.response.body
      end
      if body.class == String
-       body.slice!(0,25)
-       body.chomp!("\"}")
-       puts body
+       puts "The system could not process your request: #{body.split(":").last.delete("\"}").chop}"
+       puts "Please try again!"
        go
      else
        updated_data= JSON.parse(body)
