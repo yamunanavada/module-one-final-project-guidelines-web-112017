@@ -1,5 +1,6 @@
 require_relative '../config/environment'
 require "pry"
+ActiveRecord::Base.logger = nil
 
 
 #create or find user

@@ -4,6 +4,7 @@ require "pry"
 
 
 class InspireMe
+  # include Searchable
 
   attr_accessor :user, :origin, :destination, :departure_date, :budget, :parsed_flight_results
 
@@ -23,7 +24,7 @@ class InspireMe
 
 
   def get_origin
-    puts "Please enter the airport code (XXX) of your starting location: "
+    puts "Please enter the city code (XXX) of your starting location: "
     @origin = gets.chomp.downcase
     if @origin.length != 3
       begin
@@ -87,7 +88,7 @@ class InspireMe
     @parsed_flight_results.map do |flight_hash|
       flight_hash[:result_id] = @parsed_flight_results.index(flight_hash)+1
     end
-    binding.pry
+
   end
 
   def create_flights_inspiration(array_of_flights)
@@ -96,7 +97,7 @@ class InspireMe
       #now we are creating flight instances that are inserted into our database using create
       new_saved_flight = Flight.find_or_create_by(price: flight[:price], origin: flight[:origin], destination:  flight[:destination], date_of_departure: flight[:date_of_departure], time_of_departure: flight[:time_of_departure], date_of_arrival: flight[:date_of_arrival], time_of_arrival: flight[:time_of_arrival], number_of_layovers: flight[:number_of_layovers])
     end
-    binding.pry
+
   end
 
   def show_user_the_results(array_of_flights)
@@ -144,7 +145,7 @@ class InspireMe
     parsed_flight_hashes.each do |flight|
       matching_flight_object = Flight.find_by(price: flight[:price], origin: flight[:origin], destination: flight[:destination], date_of_departure: flight[:date_of_departure], date_of_arrival: flight[:date_of_arrival])
       #Trip.create(find_flight[:id],user[:id])
-      binding.pry
+
       Trip.find_or_create_by(user_id: user.id, flight_id: matching_flight_object.id, booked_flight: false)
 
     end

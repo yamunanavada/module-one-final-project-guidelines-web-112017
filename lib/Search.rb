@@ -5,6 +5,8 @@ require "pry"
 
 class Search
 
+  # include Searchable
+
   attr_accessor :user, :origin, :destination, :departure_date, :parsed_flight_results
 
   def initialize(user)
@@ -89,8 +91,6 @@ class Search
     @parsed_flight_results.map do |flight_hash|
       flight_hash[:result_id] = @parsed_flight_results.index(flight_hash)+1
     end
-    binding.pry
-
   end #returns array of flights in viewable format
 
   def create_flights(array_of_flights)
@@ -99,7 +99,7 @@ class Search
       #now we are creating flight instances that are inserted into our database using create
       Flight.find_or_create_by(price: flight[:price], origin: flight[:origin], destination: flight[:destination], date_of_departure: flight[:date_of_departure], time_of_departure: flight[:time_of_departure], date_of_arrival: flight[:date_of_arrival], time_of_arrival: flight[:time_of_arrival],number_of_layovers: flight[:number_of_layovers])
     end
-    binding.pry
+
   end
 
   def show_user_the_results(array_of_flights)
@@ -146,8 +146,6 @@ class Search
     parsed_flight_hashes.each do |flight|
       matching_flight_object = Flight.find_by(price: flight[:price], origin: flight[:origin], destination: flight[:destination], date_of_departure: flight[:date_of_departure], time_of_departure: flight[:time_of_departure], date_of_arrival: flight[:date_of_arrival], time_of_arrival: flight[:time_of_arrival], number_of_layovers: flight[:number_of_layovers])
       #Trip.create(find_flight[:id],user[:id])
-      puts matching_flight_object
-      binding.pry
       Trip.find_or_create_by(user_id: user.id, flight_id: matching_flight_object.id, booked_flight: false)
     end
   end
