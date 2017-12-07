@@ -26,8 +26,8 @@ class Search
 
   def get_origin
     puts "Please enter the airport code (XXX) of your starting location: "
-    @origin = gets.chomp.downcase
-    if @origin.length != 3
+    @origin = gets.chomp.upcase
+    if Iatacode.find_by(code: @origin) == nil
       begin
         raise PartnerError
       rescue PartnerError => error
@@ -39,8 +39,8 @@ class Search
 
   def get_destination
       puts "Please enter the airport code (XXX) of your destination: "
-      @destination = gets.chomp.downcase
-      if @destination.length != 3
+      @destination = gets.chomp.upcase
+      if Iatacode.find_by(code: @destination) == nil
         begin
           raise PartnerError
         rescue PartnerError => error
@@ -66,14 +66,23 @@ class Search
   end
 
   def get_flights_from_api
-    data = RestClient.get("https://api.sandbox.amadeus.com/v1.2/flights/low-fare-search?apikey=m9vXViQRJGAf8CMl4HpknPxPffSFKAgE&origin=#{@origin}&destination=#{@destination}&departure_date=#{@departure_date}")
-    updated_data= JSON.parse(data)
+    body = begin
+       RestClient.get("https://api.sandbox.amadeus.com/v1.2/flights/low-fare-search?apikey=m9vXViQRJGAf8CMl4HpknPxPffSFKAgE&origin=#{@origin}&destination=#{@destination}&departure_date=#{@departure_date}")
+     rescue => e
+       e.response.body
+     end
+     if body.class == String
+       puts "The system could not process your request: #{body.split(":").last.delete("\"}").chop}"
+       puts "Please try again!"
+       go
+     else
+       updated_data= JSON.parse(body)
+     end
   end
 
   def parse_search_results(results_from_destination)
     #takes in the hash created from get_flights_from_api and parses out the data to create an array of results for viewing
     #option to do mass assignment here?
-
     @parsed_flight_results = results_from_destination["results"].map do |flight_hash|
       result = {}
       #result[:result_id] = results_from_destination["results"].index(flight_hash) + 1
@@ -105,12 +114,14 @@ class Search
   def show_user_the_results(array_of_flights)
     #displays the flights found in the search for the user
     #what if we just printed out the array from parse_search_results?
+    puts "--------------------------------------"
     array_of_flights.each do |flight|
       puts "#{flight[:result_id]}: $#{flight[:price]}. Departs from #{flight[:origin]} on #{flight[:date_of_departure]} at #{flight[:time_of_departure]}. Arrives at #{flight[:destination]} on #{flight[:date_of_arrival]} at #{flight[:time_of_arrival]}. Number of layovers: #{flight[:number_of_layovers]}."
     end
   end
 
   def want_to_save?
+    puts "--------------------------------------"
     puts "Would you like to save a flight? (Y/N)"
     answer = gets.chomp.downcase
     if answer == "y"
@@ -149,6 +160,5 @@ class Search
       Trip.find_or_create_by(user_id: user.id, flight_id: matching_flight_object.id, booked_flight: false)
     end
   end
-
 
 end
