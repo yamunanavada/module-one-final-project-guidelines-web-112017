@@ -64,9 +64,19 @@ class InspireMe
 
   def get_flights_from_inspiration_api
     #takes in user entered search terms, and gets search results from the website
-    data = RestClient.get("https://api.sandbox.amadeus.com/v1.2/flights/inspiration-search?apikey=m9vXViQRJGAf8CMl4HpknPxPffSFKAgE&origin=#{@origin}&departure_date=#{@departure_date}&max_price=#{@budget}")
-
-    updated_data= JSON.parse(data)
+    body = begin
+       RestClient.get("https://api.sandbox.amadeus.com/v1.2/flights/inspiration-search?apikey=m9vXViQRJGAf8CMl4HpknPxPffSFKAgE&origin=#{@origin}&departure_date=#{@departure_date}&max_price=#{@budget}")
+     rescue => e
+       e.response.body
+     end
+     if body.class == String
+       body.slice!(0,25)
+       body.chomp!("\"}")
+       puts body
+       go
+     else
+       updated_data= JSON.parse(body)
+     end
   end
 
   def parse_search_results_from_inspiration(get_flights_from_inspiration_api)
