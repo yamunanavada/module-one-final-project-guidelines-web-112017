@@ -21,6 +21,15 @@ class InspireMe
   end
 
 
+  ###NEW METHOD, WRAPPER
+
+  def run_search
+    get_origin #sets @origin
+    get_departure_date #sets @departure_date
+    get_budget #sets @budget
+    @raw_results = get_flights_from_inspiration_api
+  end
+
   def get_origin
     puts "Please enter the city code (XXX) of your starting location: "
     @origin = gets.chomp.downcase
@@ -60,14 +69,6 @@ class InspireMe
     end
   end
 
-###NEW METHOD, WRAPPER
-
-  def run_search
-    get_origin #sets @origin
-    get_departure_date #sets @departure_date
-    get_budget #sets @budget
-    @raw_results = get_flights_from_inspiration_api
-  end
 
 
   def get_flights_from_inspiration_api
