@@ -15,4 +15,8 @@ class PartnerError < StandardError
     "You did not enter the correct format for your budget."
   end
 
+  def delete_message
+    "You did not enter a flight number that exists."
+  end
+
 end

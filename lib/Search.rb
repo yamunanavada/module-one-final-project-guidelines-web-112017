@@ -7,17 +7,15 @@ class Search
 
   # include Searchable
 
-  attr_accessor :user, :origin, :destination, :departure_date, :parsed_flight_results
+  attr_accessor :user, :origin, :destination, :departure_date, :parsed_flight_results, :raw_results
 
   def initialize(user)
     @user = user
   end
 
   def go
-    get_origin #sets @origin for this Search
-    get_destination #sets @destination for this Search
-    get_departure_date #sets @departure date for this Search
-    parse_search_results(get_flights_from_api) #calls API; captures results as @parsed_flight_results
+    run_search
+    parse_search_results(@raw_results) #calls API; captures results as @parsed_flight_results
     create_flights(@parsed_flight_results) #creates Flight objects
     show_user_the_results(@parsed_flight_results) #displays flight results in viewable format
     want_to_save? #results in creation of Trips, or just ends - either way, return
@@ -65,6 +63,14 @@ class Search
     end
   end
 
+  def run_search
+    get_origin #sets @origin for this Search
+    get_destination #sets @destination for this Search
+    get_departure_date #sets @departure date for this Search
+    @raw_results = get_flights_from_api
+  end
+
+
   def get_flights_from_api
     body = begin
        RestClient.get("https://api.sandbox.amadeus.com/v1.2/flights/low-fare-search?apikey=m9vXViQRJGAf8CMl4HpknPxPffSFKAgE&origin=#{@origin}&destination=#{@destination}&departure_date=#{@departure_date}")
@@ -74,16 +80,16 @@ class Search
      if body.class == String
        puts "The system could not process your request: #{body.split(":").last.delete("\"}").chop}"
        puts "Please try again!"
-       go
+      run_search
      else
-       updated_data= JSON.parse(body)
+      updated_data = JSON.parse(body)
      end
   end
 
-  def parse_search_results(results_from_destination)
+  def parse_search_results(json_data)
     #takes in the hash created from get_flights_from_api and parses out the data to create an array of results for viewing
     #option to do mass assignment here?
-    @parsed_flight_results = results_from_destination["results"].map do |flight_hash|
+    @parsed_flight_results = json_data["results"].map do |flight_hash|
       result = {}
       #result[:result_id] = results_from_destination["results"].index(flight_hash) + 1
       result[:price] = flight_hash["fare"]["total_price"]
@@ -97,8 +103,8 @@ class Search
       result
     end.uniq
     #there are repeats in teh search results, so must first insert and make sure the flight hashes are uniq before adding the result_id
-    @parsed_flight_results.map do |flight_hash|
-      flight_hash[:result_id] = @parsed_flight_results.index(flight_hash)+1
+    @parsed_flight_results.each_with_index do |flight_hash, index|
+      flight_hash[:result_id] = index+1
     end
   end #returns array of flights in viewable format
 
@@ -159,6 +165,7 @@ class Search
       #Trip.create(find_flight[:id],user[:id])
       Trip.find_or_create_by(user_id: user.id, flight_id: matching_flight_object.id, booked_flight: false)
     end
+    user.trips.reload
   end
 
 end

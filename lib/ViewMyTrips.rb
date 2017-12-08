@@ -12,22 +12,29 @@ class ViewMyTrips
   end
 
   def go
-    view_trips #looks up user's trips, prints out
+    view_trips #looks up user's trips, prints out. should return nil
     menu_for_view_trips #either ends in flight booked, or nothing; either way, nil
   end
 
   def view_trips
-    @user.trips.map do |trip|
-      flight = Flight.find_by(id: trip[:flight_id])
-      if flight[:time_of_departure] == "-"
-        puts "#{user.trips.index(trip) + 1}: $#{flight[:price]}. Departs from #{flight[:origin]} on #{flight[:date_of_departure]}. Arrives at #{flight[:destination]} on #{flight[:date_of_arrival]}."
-      else
-        puts "#{user.trips.index(trip) + 1}: $#{flight[:price]}. Departs from #{flight[:origin]} on #{flight[:date_of_departure]} at #{flight[:time_of_departure]}. Arrives at #{flight[:destination]} on #{flight[:date_of_arrival]} at #{flight[:time_of_arrival]}. Number of layovers: #{flight[:number_of_layovers]}."
+    binding.pry
+    if @user.trips.length == 0
+      puts "You have no trips saved."
+    elsif
+      @user.trips.map do |trip|
+        flight = Flight.find_by(id: trip[:flight_id])
+        if flight[:time_of_departure] == "-"
+          puts "#{user.trips.index(trip) + 1}: $#{flight[:price]}. Departs from #{flight[:origin]} on #{flight[:date_of_departure]}. Arrives at #{flight[:destination]} on #{flight[:date_of_arrival]}."
+        else
+          puts "#{user.trips.index(trip) + 1}: $#{flight[:price]}. Departs from #{flight[:origin]} on #{flight[:date_of_departure]} at #{flight[:time_of_departure]}. Arrives at #{flight[:destination]} on #{flight[:date_of_arrival]} at #{flight[:time_of_arrival]}. Number of layovers: #{flight[:number_of_layovers]}."
+        end
       end
     end
-  end
+    puts "--------------------------------------"
+  end #returns nil
 
   def menu_for_view_trips
+    binding.pry
     puts "Please select an option.
     1 - Book a Trip
     2 - Delete a Trip
@@ -37,26 +44,41 @@ class ViewMyTrips
     when 1
       puts "--------------------------------------"
       book_a_flight?
+      go
     when 2
       puts "--------------------------------------"
-      delete_a_trip?
+      delete_a_trip? #loops until success, then returns nil
+      go
     when 3
     end
   end
 
 
   def delete_a_trip?
+    binding.pry
     puts "Please list the number of the flight you would like to delete from your saved trips."
     trip = gets.chomp.to_i
+    if trip > user.trips.length  #user chooses a trip not shown
+      begin
+        raise PartnerError
+      rescue PartnerError => error
+        puts error.delete_message
+        delete_a_trip? #start this method again
+      end
+    end
     delete_trip(trip, @user)
+    #go
   end
 
 
   def delete_trip(trip_to_delete, user)
+    binding.pry
     #array of flights, find the trip, and delete it.
-    Trip.where(flight_id: user.trips[trip_to_delete - 1][:flight_id]).delete_all
+    x = Trip.where(flight_id: user.trips[trip_to_delete - 1][:flight_id], user_id: user.id)
+    binding.pry
+    x.delete_all
     @user.trips.reload
-
+    puts "The selected trip has been deleted."
   end
 
 

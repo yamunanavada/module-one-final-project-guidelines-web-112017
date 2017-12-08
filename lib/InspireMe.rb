@@ -6,17 +6,15 @@ require "pry"
 class InspireMe
   # include Searchable
 
-  attr_accessor :user, :origin, :destination, :departure_date, :budget, :parsed_flight_results
+  attr_accessor :user, :origin, :destination, :departure_date, :budget, :raw_results, :parsed_flight_results
 
   def initialize(user)
     @user = user
   end
 
   def go
-    get_origin #sets @origin for this Search
-    get_departure_date #sets @departure date for this Search
-    get_budget #sets @budget for this Search
-    parse_search_results_from_inspiration(get_flights_from_inspiration_api) #calls API; captures results as @parsed_flight_results
+    run_search #sets @raw_results
+    parse_search_results_from_inspiration(@raw_results) #calls API; captures results as @parsed_flight_results
     create_flights_inspiration(@parsed_flight_results) #creates Flight objects
     show_user_the_results(@parsed_flight_results) #displays flight results in viewable format
     want_to_save? #results in creation of Trips, or just ends - either way, return
@@ -62,6 +60,16 @@ class InspireMe
     end
   end
 
+###NEW METHOD, WRAPPER
+
+  def run_search
+    get_origin #sets @origin
+    get_departure_date #sets @departure_date
+    get_budget #sets @budget
+    @raw_results = get_flights_from_inspiration_api
+  end
+
+
   def get_flights_from_inspiration_api
     #takes in user entered search terms, and gets search results from the website
     body = begin
@@ -72,15 +80,16 @@ class InspireMe
      if body.class == String
        puts "The system could not process your request: #{body.split(":").last.delete("\"}").chop}"
        puts "Please try again!"
-       go
+       run_search
+       #removed go, which would be recursive
      else
-       updated_data= JSON.parse(body)
+      updated_data = JSON.parse(body)
      end
   end
 
-  def parse_search_results_from_inspiration(get_flights_from_inspiration_api)
+  def parse_search_results_from_inspiration(json_data)
 
-    @parsed_flight_results = get_flights_from_inspiration_api["results"].map do |flight_hash|
+    @parsed_flight_results = json_data["results"].map do |flight_hash|
       result = {}
       # result[:result_id] = get_flights_from_inspiration_api["results"].index(flight_hash) + 1
       result[:price] = flight_hash["price"]
@@ -94,10 +103,9 @@ class InspireMe
       result
     end.uniq
 
-    @parsed_flight_results.map do |flight_hash|
-      flight_hash[:result_id] = @parsed_flight_results.index(flight_hash)+1
+    @parsed_flight_results.each_with_index do |flight_hash, index|
+      flight_hash[:result_id] = index+1
     end
-
   end
 
   def create_flights_inspiration(array_of_flights)
@@ -159,6 +167,7 @@ class InspireMe
       Trip.find_or_create_by(user_id: user.id, flight_id: matching_flight_object.id, booked_flight: false)
 
     end
+    user.trips.reload
   end
 
 end
