@@ -22,10 +22,17 @@ class ViewMyTrips
     elsif #otherwise, for each Trip saved, find the Flight object
       @user.trips.each_with_index do |trip, index| #for each trip associated with User
         flight = Flight.find_by(id: trip[:flight_id]) #take the flight_id, use it to search Flight (flight_id = id)
-        if flight[:time_of_departure] == "-"
-          puts "#{index+ 1}: $#{flight[:price]}. Departs from #{flight[:origin]} on #{flight[:date_of_departure]}. Arrives at #{flight[:destination]} on #{flight[:date_of_arrival]}."
+        if trip[:booked_flight] == true
+          binding.pry
+          booked = "Has been booked."
         else
-          puts "#{index+ 1}: $#{flight[:price]}. Departs from #{flight[:origin]} on #{flight[:date_of_departure]} at #{flight[:time_of_departure]}. Arrives at #{flight[:destination]} on #{flight[:date_of_arrival]} at #{flight[:time_of_arrival]}. Number of layovers: #{flight[:number_of_layovers]}."
+          booked = "Has not been booked."
+        end
+
+        if flight[:time_of_departure] == "-"
+          puts "#{index+ 1}: $#{flight[:price]}. Departs from #{flight[:origin]} on #{flight[:date_of_departure]}. Arrives at #{flight[:destination]} on #{flight[:date_of_arrival]}. #{booked}"
+        else
+          puts "#{index+ 1}: $#{flight[:price]}. Departs from #{flight[:origin]} on #{flight[:date_of_departure]} at #{flight[:time_of_departure]}. Arrives at #{flight[:destination]} on #{flight[:date_of_arrival]} at #{flight[:time_of_arrival]}. Number of layovers: #{flight[:number_of_layovers]}. #{booked}"
         end
       end #returns array of nothing
     end #returns array of nothing
@@ -97,6 +104,8 @@ class ViewMyTrips
   def book_trip(trip_to_book)
     flight = Flight.find_by(id: trip_to_book.flight_id) #modified this; instead of user.trips[flight_to_book - 1], we have direct trip_to_book now
     trip_to_book.booked_flight = true
+    binding.pry
+
     if flight[:time_of_departure] == "-"
       puts "Congrats! You have booked your trip from #{flight[:origin]} to #{flight[:destination]} on #{flight[:date_of_departure]}. Happy traveling!"
     else
