@@ -2,7 +2,7 @@ README
 
 Purpose
 
-This program allows users to get real-time data on available flights.
+*This program allows users to get real-time data on available flights.*
 
   1. Users can make a real-time query to see flights that match user-provided parameters of origin, destination, and
       departure date (“Search”) OR origin, departure date, and budget (“Inspire Me”)

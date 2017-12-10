@@ -17,6 +17,7 @@ class ViewMyTrips
   end
 
   def view_trips #prints Flight info, and returns nil
+
     if @user.trips.length == 0  #if user has no saved Trips - put "you have 0"
       puts "You have no trips saved."
     elsif #otherwise, for each Trip saved, find the Flight object
@@ -83,7 +84,6 @@ class ViewMyTrips
   end
 
   def book_a_flight?
-    puts "--------------------------------------"
     puts "Please list the number of the trip you would like to book. Please list just one trip."
     selection = gets.chomp.to_i
     if selection > user.trips.length  #i.e. if user chooses a trip not shown

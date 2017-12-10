@@ -148,7 +148,7 @@ class Search
   def select_flights
     puts "Please list the flight number(s) that you would like to save. If selecting multiple, please separate with a space."
     flights = gets.chomp.downcase
-    flights_to_save = flights.split(" ").map {|n| n.to_i}
+    flights_to_save = flights.split(/\s|,/).map {|n| n.to_i}
   end #returns array of selected_ids representing flights
 
   def match_selections_to_flights(array_selected_ids, parsed_hash_flights)
@@ -163,7 +163,7 @@ class Search
     parsed_flight_hashes.each do |flight|
       matching_flight_object = Flight.find_by(price: flight[:price], origin: flight[:origin], destination: flight[:destination], date_of_departure: flight[:date_of_departure], time_of_departure: flight[:time_of_departure], date_of_arrival: flight[:date_of_arrival], time_of_arrival: flight[:time_of_arrival], number_of_layovers: flight[:number_of_layovers])
       #Trip.create(find_flight[:id],user[:id])
-      Trip.find_or_create_by(user_id: user.id, flight_id: matching_flight_object.id)
+      Trip.find_or_create_by(user_id: user.id, flight_id: matching_flight_object.id) #edited this
     end
     user.trips.reload
   end
